@@ -11,6 +11,9 @@ Simulations accompanying the note *Sequential Meta-Bayesian Inference With Conti
 | `circbayes.py` | Core model (vectorised NumPy): sampling, belief trajectories, the two noise models, the Gaussian-prior denoiser from the note, the generative model's own mixture-prior denoiser, plug-in and E[softmax] readouts (2D Gauss–Hermite), the full loop with both choice-point options, and metrics |
 | `verify.py` | 15 numerical checks of every closed-form claim in the note |
 | `experiments.py` | Experiments 1–5 below; writes `figures/` |
+| `same_prior_polarization.py` | Experiment 6: twins with identical priors and identical data, across three evidence conditions and a σ sweep (~4 min) |
+| `long_run_check.py` | Experiment 6b: does lock-in under well-specified evidence decay by t = 300? (~5 s) |
+| `same_prior_results.txt`, `long_run_results.txt` | Output of Experiments 6 and 6b |
 | `results.txt`, `verify_output.txt` | Full numerical output of the runs reported here |
 
 ## Running
@@ -65,6 +68,25 @@ The claim that the plug-in readout is overconfident held in 100% of 10⁵ random
 Under mixture-propagate, which camp an agent joins is close to a coin flip relative to its twin. **Caveat:** mixed evidence violates the model's single-source assumption, and mixture-propagate has not been run on correctly specified data.
 
 **5. Normative contrary updating** (no noise). With three hypotheses, exact Bayes can move a shared hypothesis in opposite directions for two agents who see the same datum. The exact rule: p_k rises if and only if e_k·Δη > log E_p[exp(e·Δη)]; to first order, (e_k − ē_p)·Δη > 0. Random agent pairs move H0 in opposite directions 7.4% of the time (cf. Jern, Chang & Kemp, 2014, *Psychological Review*).
+
+**6. Polarization with identical priors** (`same_prior_polarization.py`, `long_run_check.py`). Twins share the prior and the data, and only their internal noise is independent, so noise-free twins can never disagree. The metric is the share of pairs confidently committed (> 0.9) to different hypotheses, at κ = 1, σ = 1:
+
+| Method | Single true hypothesis, t = 15 → 60 | Mixed evidence, t = 60 | Directionless evidence, t = 60 |
+|---|---|---|---|
+| raw (no denoising) | 11.7% → 1.3% | 30.3% | 35.8% |
+| Gaussian, readout-only | 0.0% → 0.0% | 0.5% | 0.3% |
+| Gaussian, propagate | 0.5% → 0.2% | 0.3% | 0.4% |
+| mixture, readout-only | 0.9% → 0.5% | 12.3% | 12.6% |
+| mixture, propagate | 18.1% → 20.4% | 48.9% | 54.7% |
+
+- **Raw noise gives only temporary divergence** when there is a true hypothesis: it falls to 0% by t = 300.
+- **The Gaussian denoisers moderate:** confident opposite camps essentially never form.
+- **Under mixed or directionless evidence, noise breaks a tie.** Even raw noise splits 30–36% of pairs, because the model insists one hypothesis must be true when none is.
+- **Only mixture-propagate locks in against an identifiable truth.** From t = 60 to t = 300, 20.5% of pairs stay in opposite camps, 12.7% of agents stay above 0.99 confidence in the wrong hypothesis, and only 0.8% of agents wrong at t = 60 recover by t = 300.
+
+**Rough threshold calculation.** Suppose an agent has committed to wrong lobe j. The denoiser pulls its state toward c_j(t) with gain G = Σ(Σ + σ²I)⁻¹, while the data push it away by δ = κA₁(e_true − e_j) per step. The state settles at d* = Σδ/σ² = κ²tVδ/σ². Escaping requires reaching the midpoint, a distance of tδ/2. Both grow linearly in t, so t cancels: the agent escapes only if σ < σ_c ≈ κ√(2v), about 0.84–0.95 at κ = 1. In the σ sweep, the locked-in share is 0.0%, 0.2%, 19.7% and 51.7% at σ = 0.25, 0.5, 1 and 2. The calculation assumes full commitment to one lobe, ignores noise fluctuations and has been checked only at κ = 1.
+
+**Caveat.** The lock-in depends on the note's literal loop, which re-applies the prior to an already-denoised state at every step. A variant that tracks its uncertainty properly has not been tested.
 
 ## Known limitations
 

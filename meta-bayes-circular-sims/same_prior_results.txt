@@ -1,0 +1,41 @@
+kappa=1.0, per-step sigma=1.0, 4000 twin pairs, flat identical priors
+
+================================================================================================
+WELL-SPECIFIED   noise-free twins: disagreement 0 by construction; mean confidence at t=5/15/30/60 = 0.84/0.98/1.00/1.00; accuracy 0.84/0.98/1.00/1.00
+method                 |  opposite confident camps   |        mean TV(A,B)         | accuracy t=60
+                       | t=5    t=15   t=30   t=60   | t=5    t=15   t=30   t=60   |
+raw (no denoising)     | 0.092  0.117  0.065  0.013  | 0.419  0.269  0.116  0.021  | 0.989
+Gauss readout          | 0.000  0.000  0.000  0.000  | 0.269  0.260  0.185  0.075  | 0.990
+Gauss propagate s2=4   | 0.003  0.005  0.002  0.002  | 0.352  0.323  0.311  0.317  | 0.735
+mixture readout        | 0.000  0.009  0.011  0.005  | 0.302  0.269  0.139  0.029  | 0.991
+mixture propagate      | 0.005  0.181  0.212  0.204  | 0.378  0.304  0.221  0.205  | 0.873
+
+================================================================================================
+MIXED   noise-free twins: disagreement 0 by construction; mean confidence at t=5/15/30/60 = 0.76/0.87/0.91/0.94
+method                 |  opposite confident camps   |        mean TV(A,B)         | confidence t=60
+                       | t=5    t=15   t=30   t=60   | t=5    t=15   t=30   t=60   |
+raw (no denoising)     | 0.091  0.196  0.246  0.303  | 0.472  0.462  0.434  0.418  | 0.961
+Gauss readout          | 0.000  0.001  0.002  0.005  | 0.278  0.327  0.334  0.322  | 0.727
+Gauss propagate s2=4   | 0.002  0.004  0.003  0.003  | 0.372  0.371  0.375  0.371  | 0.698
+mixture readout        | 0.000  0.016  0.052  0.123  | 0.316  0.400  0.404  0.398  | 0.886
+mixture propagate      | 0.006  0.298  0.470  0.489  | 0.397  0.488  0.488  0.489  | 1.000
+
+================================================================================================
+DIRECTIONLESS   noise-free twins: disagreement 0 by construction; mean confidence at t=5/15/30/60 = 0.74/0.84/0.88/0.92
+method                 |  opposite confident camps   |        mean TV(A,B)         | confidence t=60
+                       | t=5    t=15   t=30   t=60   | t=5    t=15   t=30   t=60   |
+raw (no denoising)     | 0.103  0.225  0.302  0.358  | 0.493  0.525  0.535  0.531  | 0.950
+Gauss readout          | 0.000  0.001  0.001  0.003  | 0.286  0.337  0.363  0.382  | 0.670
+Gauss propagate s2=4   | 0.002  0.004  0.004  0.004  | 0.376  0.385  0.396  0.380  | 0.679
+mixture readout        | 0.000  0.012  0.057  0.126  | 0.324  0.421  0.470  0.499  | 0.848
+mixture propagate      | 0.005  0.324  0.531  0.547  | 0.405  0.529  0.551  0.548  | 1.000
+
+================================================================================================
+Opposite confident camps at t=60 vs internal noise sigma
+condition        method               s=0.25  s=0.5   s=1.0   s=2.0  
+well-specified   raw (no denoising)   0.000   0.000   0.009   0.183  
+well-specified   mixture propagate    0.000   0.002   0.197   0.517  
+mixed            raw (no denoising)   0.035   0.131   0.300   0.455  
+mixed            mixture propagate    0.079   0.274   0.474   0.614  
+directionless    raw (no denoising)   0.042   0.171   0.356   0.516  
+directionless    mixture propagate    0.114   0.363   0.540   0.637  
