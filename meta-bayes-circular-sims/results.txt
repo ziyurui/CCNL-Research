@@ -1,0 +1,60 @@
+==============================================================================
+EXP 1  Denoisers under per-step noise   (kappa=1.0, flat prior, m=0)
+==============================================================================
+
+At t=10:  mean KL(p_clean || q)  [nats]   |  top-label ECE
+ sigma |        raw plug-in |    Gauss + plug-in | Gauss + E[softmax] |    mixture (Bayes) |  w_t
+  0.25 |   0.0412 /  0.009   |   0.0401 /  0.006   |   0.0418 /  0.016   |   0.0417 /  0.009   | 0.957
+  0.50 |   0.1759 /  0.042   |   0.1576 /  0.027   |   0.1623 /  0.046   |   0.1484 /  0.007   | 0.848
+  1.00 |   0.8292 /  0.161   |   0.5355 /  0.103   |   0.4592 /  0.074   |   0.4393 /  0.004   | 0.583
+  1.50 |   1.8876 /  0.276   |   0.8266 /  0.165   |   0.6491 /  0.061   |   0.6370 /  0.005   | 0.383
+  2.00 |   3.1996 /  0.355   |   0.9814 /  0.195   |   0.7567 /  0.050   |   0.7501 /  0.006   | 0.259
+  3.00 |   5.8414 /  0.454   |   1.0563 /  0.207   |   0.8535 /  0.032   |   0.8503 /  0.005   | 0.134
+(clean posterior ECE for reference: 0.0020)
+
+sigma=1.5: KL at t=1,5,10,20,30:
+            raw plug-in: 0.7074  1.6758  1.8642  1.6247  1.2514
+        Gauss + plug-in: 0.1729  0.5888  0.8177  0.9001  0.7891
+     Gauss + E[softmax]: 0.1730  0.5382  0.6479  0.5794  0.4611
+        mixture (Bayes): 0.1726  0.5353  0.6344  0.5426  0.4044
+   w_t (Gauss, moment-matched s_t^2): 0.182  0.285  0.383  0.515  0.601
+
+==============================================================================
+EXP 2  Growth of E|eta_t|^2 : coherent (model) data vs incoherent (uniform) data
+==============================================================================
+    coherent: log-log slope of s_t^2 over t in [21,200] = 1.946
+  incoherent: log-log slope of s_t^2 over t in [21,200] = 1.006
+  => model-generated data are in the s^2 ~ t^2 regime: w_t -> 1 under readout-only;
+     only data with no net direction give s^2 ~ t (constant w).
+
+==============================================================================
+EXP 3  Order effects: same multiset of data, two orders
+==============================================================================
+  clean Bayes (both orders identical): mean q0-q1 = +0.0002
+  readout-only, Gauss             : mean q0-q1  H0-first -0.0001   H1-first -0.0001   order effect +0.0000
+  readout-only, mixture           : mean q0-q1  H0-first +0.0035   H1-first +0.0035   order effect +0.0000
+  propagate, Gauss s_t^2 moment   : mean q0-q1  H0-first -0.3500   H1-first +0.3449   order effect -0.6949
+  propagate, Gauss s^2 fixed=4    : mean q0-q1  H0-first -0.3809   H1-first +0.3829   order effect -0.7638
+  propagate, mixture              : mean q0-q1  H0-first +0.0577   H1-first -0.0558   order effect +0.1135
+  weight of datum 1 vs datum 30 in eta_hat_30  ($s_t^2$ moment-matched): 0.0277 vs 0.9903
+  weight of datum 1 vs datum 30 in eta_hat_30  ($s^2$ fixed = 4): 0.0012 vs 0.8000
+  weight of datum 1 vs datum 30 in eta_hat_30  ($s^2$ fixed = 1): 0.0000 vs 0.5000
+
+==============================================================================
+EXP 4  Pairs of agents, identical mixed evidence, independent internal noise
+==============================================================================
+  no denoising (raw η̃)   : TV(A,B) at t=5,20,40 = 0.472  0.459  0.433 | opposite confident camps at t=40: 0.277 | TV(agent, clean) t=40: 0.331
+  readout-only, Gauss     : TV(A,B) at t=5,20,40 = 0.279  0.329  0.328 | opposite confident camps at t=40: 0.004 | TV(agent, clean) t=40: 0.366
+  propagate, Gauss s²=4   : TV(A,B) at t=5,20,40 = 0.373  0.372  0.375 | opposite confident camps at t=40: 0.004 | TV(agent, clean) t=40: 0.494
+  readout-only, mixture   : TV(A,B) at t=5,20,40 = 0.319  0.403  0.410 | opposite confident camps at t=40: 0.089 | TV(agent, clean) t=40: 0.330
+  propagate, mixture      : TV(A,B) at t=5,20,40 = 0.404  0.497  0.498 | opposite confident camps at t=40: 0.494 | TV(agent, clean) t=40: 0.433
+
+==============================================================================
+EXP 5  Contrary updating on a shared datum, exact Bayes, no noise
+==============================================================================
+  agent A: prior p(H0)=0.450 -> posterior p(H0)=0.513
+  agent B: prior p(H0)=0.450 -> posterior p(H0)=0.288
+  criterion  p_k up <=> e_k·Δη > log E_p[exp(e·Δη)]  holds in 100.0000% of cases
+  random agent pairs, random shared datum: P(they move H0 in opposite directions) = 0.074
+
+figures written to ./figures/

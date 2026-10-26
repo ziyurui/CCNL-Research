@@ -1,0 +1,24 @@
+[PASS] sum_k e^{i mu_k} = 0                                           err=3.33e-16
+[PASS] E^T E = (3/2) I                                                err=4.44e-16
+[PASS] E E^T = (3/2) P                                                err=4.44e-16
+[PASS] softmax(log pi + E eta_t) == brute-force posterior             err=3.55e-15
+[PASS] worked example: S_2 = i                                        err=1.11e-16
+[PASS] worked example: logits/kappa = (0, .866, -.866)                err=3.33e-16
+[PASS] |S| = 2|cos(Delta/2)| for two points                           err=4.44e-16
+[PASS] eta-noise cov = sig_l^2/(3/2) I  (rel err, MC 4e5)             err=1.74e-03
+[PASS] E E^+ eps_l == eps_l (noise lies in the sum-zero plane)        err=1.55e-15
+[PASS] posterior predictive == sum_k softmax(l_t)_k VM(x; mu_k, kappa) err=1.78e-15
+[PASS] per-step noise: Var(eta_tilde_t - eta_t) = t sigma^2 (rel)     err=2.33e-03
+[PASS] E[eta_t|k=0] matches kappa t A1 e_0 (rel)                      err=5.62e-04
+[PASS] Cov[eta_t|k=0] matches CLT anisotropic covariance (rel)        err=2.19e-03
+       anisotropy (radial/angular variance) at kappa=1.7: 0.558
+[PASS] moment-matched s_t^2 = kappa^2(t+t(t-1)A1^2)/2 (rel)           err=8.74e-04
+[PASS] 2D Gauss-Hermite (16x16) E[softmax] vs MC 2e5                  err=2.48e-03
+       plug-in max-prob >= expected max-prob in 100.0000% of 1e5 random cases
+       expected entropy >= plug-in entropy  in 100.0000% of 1e5 random cases
+       worst entropy violation: H(plug)-H(exp) = -0.0000 at pi=[0.236 0.709 0.054], |eta_hat|=18.64, v=4.50
+       t= 1: CLT-mixture vs exact p(k|eta~): mean |diff| = 0.0340, max = 0.1765
+       t= 3: CLT-mixture vs exact p(k|eta~): mean |diff| = 0.0178, max = 0.1000
+       t=10: CLT-mixture vs exact p(k|eta~): mean |diff| = 0.0017, max = 0.0745
+
+15/15 checks passed
